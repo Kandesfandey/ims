@@ -125,27 +125,26 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
+            mongocxx::collection collection = db["billing"];
 
-                mongocxx::collection collection = db["billing"];
+            auto builder = bsoncxx::builder::stream::document{};
+            bsoncxx::document::value doc_value = builder
+                                                 << "bill_id"
+                                                 << reqj["bill_id"].s()
+                                                 << "item_id"
+                                                 << reqj["item_id"].s()
+                                                 << "user_id"
+                                                 << reqj["user_id"].s()
+                                                 << "manager_id"
+                                                 << reqj["manager_id"].s()
+                                                 << "price"
+                                                 << int(reqj["price"].i())
+                                                 << "quantity"
+                                                 << int(reqj["quantity"].i())
+                                                 << bsoncxx::builder::stream::finalize;
+            bsoncxx::document::view docview = doc_value.view();
 
-                auto builder = bsoncxx::builder::stream::document{};
-                bsoncxx::document::value doc_value = builder
-                                                    << "bill_id"
-                                                    << reqj["bill_id"].s()
-                                                    << "item_id"
-                                                    << reqj["item_id"].s()
-                                                    << "user_id"
-                                                    << reqj["user_id"].s()
-                                                    << "manager_id"
-                                                    << reqj["manager_id"].s()
-                                                    << "price"
-                                                    << int(reqj["price"].i())
-                                                    << "quantity"
-                                                    << int(reqj["quantity"].i())
-                                                    << bsoncxx::builder::stream::finalize;
-                bsoncxx::document::view docview = doc_value.view();
-
-                bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(docview);
+            bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(docview);
 
             // Billing new_request{
             //     reqj["bill_id"].s(),
@@ -163,7 +162,6 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
     CROW_ROUTE(app, "/api/bill/view")
     ([db]() {
-
         mongocxx::collection collection = db["billing"];
 
         mongocxx::cursor cursor = collection.find({});
@@ -172,8 +170,8 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
         crow::json::wvalue x;
 
-        for(auto doc : cursor) {
-            main_str += std::to_string(bsoncxx::to_json(doc));
+        for (auto doc : cursor) {
+            main_str += (bsoncxx::to_json(doc));
         }
 
         main_str += "]";
@@ -240,7 +238,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
-                mongocxx::collection collection = db["inventory"];
+            mongocxx::collection collection = db["inventory"];
 
             //     auto builder = bsoncxx::builder::stream::document{};
             //     bsoncxx::document::value doc_value = builder
@@ -264,7 +262,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
             // collection.update_one(builder << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
             //           builder << "$set" << open_document <<doc_value);
-
 
             // Inventory_Lists new_request{
             //     reqj["name"].s(),
@@ -297,8 +294,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
             bsoncxx::builder::stream::document query{};
 
             collection.update_one(query << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
-                      query << "$set" << open_document <<
-                        "priority" << reqj["priority"].s() << close_document << bsoncxx::builder::stream::finalize);
+                                  query << "$set" << open_document << "priority" << reqj["priority"].s() << close_document << bsoncxx::builder::stream::finalize);
 
             // for (auto &x : inventory_lists_db) {
             //     if (x.inventory_id == reqj["inventory_id"].s()) {
@@ -333,7 +329,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
     CROW_ROUTE(app, "/api/list/view")
     ([db]() {
-
         mongocxx::collection collection = db["inventory"];
 
         mongocxx::cursor cursor = collection.find({});
@@ -342,8 +337,8 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
         crow::json::wvalue x;
 
-        for(auto doc : cursor) {
-            main_str += std::to_string(bsoncxx::to_json(doc));
+        for (auto doc : cursor) {
+            main_str += bsoncxx::to_json(doc);
         }
 
         main_str += "]";
@@ -359,19 +354,19 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
         mongocxx::cursor cursor = collection.find({});
 
-        for (auto &x : cursor) {
-            if (x.available == 0) {
-                x.available = 1;
+        // for (auto &&temp : cursor) {
+        //     bsoncxx::builder::stream::document query{};
+        //     if (temp["available"].get_utf8().value == 0) {
+        //         temp.available = 1;
 
-                collection.update_one(query << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
-                    query << "$set" << open_document <<
-                    "available" << 1 << close_document << bsoncxx::builder::stream::finalize);
-                main_str = "Server Assigned " + x.inventory_id;
-                break;
-            } else {
-                main_str = "No Server are currently Free";
-            }
-        }
+        //         collection.update_one(query << "inventory_id" << temp["inventory_id"].s() << bsoncxx::builder::stream::finalize,
+        //                               query << "$set" << open_document << "available" << 1 << close_document << bsoncxx::builder::stream::finalize);
+        //         main_str = "Server Assigned " + (x["inventory_id"]);
+        //         break;
+        //     } else {
+        //         main_str = "No Server are currently Free";
+        //     }
+        // }
 
         return main_str;
     });
@@ -417,21 +412,17 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
     CROW_ROUTE(app, "/api/request/accept")
         .methods("POST"_method)([db](const crow::request &req) {
-
             auto reqj = crow::json::load(req.body);
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
             mongocxx::collection collection = db["request"];
 
-
             bsoncxx::builder::stream::document query{};
 
             collection.update_one(query << "request_id" << reqj["request_id"].s() << bsoncxx::builder::stream::finalize,
-                      query << "$set" << open_document <<
-                        "status" << "Pass" << close_document << bsoncxx::builder::stream::finalize);
-
-
+                                  query << "$set" << open_document << "status"
+                                        << "Pass" << close_document << bsoncxx::builder::stream::finalize);
 
             // for (auto &x : requests_db) {
             //     if (x.item_id == reqj["request_id"].s()) {
@@ -453,8 +444,8 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
             bsoncxx::builder::stream::document query{};
 
             collection.update_one(query << "request_id" << reqj["request_id"].s() << bsoncxx::builder::stream::finalize,
-                      query << "$set" << open_document <<
-                        "status" << "Fail" << close_document << bsoncxx::builder::stream::finalize);
+                                  query << "$set" << open_document << "status"
+                                        << "Fail" << close_document << bsoncxx::builder::stream::finalize);
 
             // for (auto &x : requests_db) {
             //     if (x.item_id == reqj["request_id"].s()) {
@@ -475,8 +466,8 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
             crow::json::wvalue x;
 
-            for(auto doc : cursor) {
-                main_str += std::to_string(bsoncxx::to_json(doc));
+            for (auto doc : cursor) {
+                main_str += (bsoncxx::to_json(doc));
             }
 
             main_str += "]";
