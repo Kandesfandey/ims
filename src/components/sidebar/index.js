@@ -47,10 +47,12 @@ const SideBar = () => {
               <SpanContainer>Products</SpanContainer>
             </ListElement>
           </LinkContainer>
+          <LinkContainer to = "/requests">
           <ListElement>
             <CreditCardIcon />
             <SpanContainer>Request</SpanContainer>
           </ListElement>
+          </LinkContainer>
           <ListElement>
             <LocalShippingIcon />
             <SpanContainer>Delivery</SpanContainer>
