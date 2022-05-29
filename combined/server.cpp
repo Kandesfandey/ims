@@ -38,6 +38,25 @@ struct Inventory_Lists {
 std::vector<Request> requests_db;
 std::vector<Inventory_Lists> inventory_lists_db;
 
+void RapidUpdateModule(crow::SimpleApp *server) {
+    crow::SimpleApp &app = *server;
+
+    CROW_ROUTE(app, "/api/list/view/live")
+        .websocket()
+        .onopen([&](crow::websocket::connection &conn) {
+            do_something();
+        })
+        .onclose([&](crow::websocket::connection &conn, const std::string &reason) {
+            do_something();
+        })
+        .onmessage([&](crow::websocket::connection & /*conn*/, const std::string &data, bool is_binary) {
+            if (is_binary)
+                do_something(data);
+            else
+                do_something_else(data);
+        });
+}
+
 void RequestManagementModule(crow::SimpleApp *server) {
     crow::SimpleApp &app = *server;
 
