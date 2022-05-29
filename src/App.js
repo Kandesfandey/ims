@@ -1,8 +1,18 @@
+import React from "react";
+import { Admin } from "./pages";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 function App() {
   return (
-    <div className="App">
-      <h1>Yoo</h1>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Admin />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
