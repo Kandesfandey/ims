@@ -1,13 +1,18 @@
-#include "crow.h"
 #include "string"
 #include "vector"
 #include "unordered_set"
+
+#include "crow.h"
+#include "crow/middlewares/cors.h"
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/stdx.hpp>
@@ -85,8 +90,8 @@ std::vector<Billing> billing_db;
 std::vector<Request> requests_db;
 std::vector<Inventory_Lists> inventory_lists_db;
 
-void LiveHandlerModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
-    crow::SimpleApp &app = *server;
+void LiveHandlerModule(crow::App<crow::CORSHandler> *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
+    crow::App<crow::CORSHandler> &app = *server;
     mongocxx::database &db = *db_loc;
 
     std::mutex mtx;
@@ -115,8 +120,8 @@ void LiveHandlerModule(crow::SimpleApp *server, mongocxx::database *db_loc, std:
         });
 }
 
-void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
-    crow::SimpleApp &app = *server;
+void BillingManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::database *db_loc) {
+    crow::App<crow::CORSHandler> &app = *server;
     mongocxx::database &db = *db_loc;
 
     CROW_ROUTE(app, "/api/bill/add")
@@ -157,7 +162,7 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
             // billing_db.push_back(new_request);
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/bill/view")
@@ -171,8 +176,9 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
         crow::json::wvalue x;
 
         for (auto doc : cursor) {
-            main_str += (bsoncxx::to_json(doc));
+            main_str += (bsoncxx::to_json(doc)) + ",";
         }
+        main_str.pop_back();
 
         main_str += "]";
 
@@ -180,8 +186,8 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
     });
 }
 
-void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
-    crow::SimpleApp &app = *server;
+void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
+    crow::App<crow::CORSHandler> &app = *server;
     mongocxx::database &db = *db_loc;
     std::unordered_set<crow::websocket::connection *> &users = *inventory_list_users;
 
@@ -229,7 +235,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
             // inventory_lists_db.push_back(new_request);
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/list/edit")
@@ -280,7 +286,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
             //     }
             // }
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/list/priority")
@@ -302,7 +308,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
             //     }
             // }
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/list/delete")
@@ -324,7 +330,7 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
             //     }
             // }
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/list/view")
@@ -338,8 +344,9 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
         crow::json::wvalue x;
 
         for (auto doc : cursor) {
-            main_str += bsoncxx::to_json(doc);
+            main_str += (bsoncxx::to_json(doc)) + ",";
         }
+        main_str.pop_back();
 
         main_str += "]";
 
@@ -372,8 +379,8 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
     });
 }
 
-void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users) {
-    crow::SimpleApp &app = *server;
+void RequestManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users) {
+    crow::App<crow::CORSHandler> &app = *server;
     mongocxx::database &db = *db_loc;
     std::unordered_set<crow::websocket::connection *> &users = *request_list_users;
 
@@ -430,7 +437,7 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
             //     }
             // }
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/request/reject")
@@ -453,7 +460,7 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
             //     }
             // }
 
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/request/view")
@@ -467,8 +474,9 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
             crow::json::wvalue x;
 
             for (auto doc : cursor) {
-                main_str += (bsoncxx::to_json(doc));
+                main_str += (bsoncxx::to_json(doc)) + ",";
             }
+            main_str.pop_back();
 
             main_str += "]";
 
@@ -477,7 +485,21 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 }
 
 int main() {
-    crow::SimpleApp app;
+    crow::App<crow::CORSHandler> app;
+
+    // Customize CORS
+    auto &cors = app.get_middleware<crow::CORSHandler>();
+
+    // clang-format off
+    cors
+      .global()
+        .headers("X-Custom-Header", "Upgrade-Insecure-Requests")
+        .methods("POST"_method, "GET"_method)
+      .prefix("/cors")
+        .origin("*")
+      .prefix("/nocors")
+        .ignore();
+    // clang-format on
 
     // Database
     mongocxx::instance inst{};
