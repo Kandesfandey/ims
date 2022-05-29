@@ -1,12 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import { NavbarContainer } from './styles';
+import { NavbarContainer } from "./styles";
 
 const Navbar = () => {
   return (
@@ -21,12 +20,7 @@ const Navbar = () => {
             <LanguageOutlinedIcon className="icon" />
             English
           </div>
-          <div className="item">
-            <DarkModeOutlinedIcon
-              className="icon"
-              onClick={() => dispatch({ type: "TOGGLE" })}
-            />
-          </div>
+
           <div className="item">
             <FullscreenExitOutlinedIcon className="icon" />
           </div>
@@ -51,7 +45,7 @@ const Navbar = () => {
         </div>
       </div>
     </NavbarContainer>
-  )
-}
+  );
+};
 
 export default Navbar;

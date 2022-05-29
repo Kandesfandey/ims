@@ -1,10 +1,16 @@
 import React from "react";
-import { SideBar } from "../../components";
+import { SideBar, NavBar } from "../../components";
+import { Home, HomeContainer } from "../admin/styles/admin";
 
 const Admin = () => {
   return (
     <>
-      <SideBar />
+      <Home>
+        <SideBar />
+        <HomeContainer>
+          <NavBar />
+        </HomeContainer>
+      </Home>
     </>
   );
 };
