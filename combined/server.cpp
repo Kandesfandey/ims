@@ -7,7 +7,7 @@ struct Request {
     std::string name;
     std::string project_owner;
     std::string assigned_manager;
-
+    std::string status;
     std::string item_id;
 
     int quantity;
@@ -47,6 +47,7 @@ void RequestManagementModule(crow::SimpleApp *server) {
                 reqj["name"].s(),
                 reqj["project_owner"].s(),
                 reqj["assigned_manager"].s(),
+                "Pending",
                 reqj["item_id"].s(),
 
                 int(reqj["quantity"].i()),
@@ -55,9 +56,7 @@ void RequestManagementModule(crow::SimpleApp *server) {
 
             requests_db.push_back(new_request);
 
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
-
-            return crow::response(crow::status::ACCEPTED);
+            return crow::response(crow::status::OK);
         });
 
     CROW_ROUTE(app, "/api/list/add")
