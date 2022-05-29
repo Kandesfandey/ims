@@ -458,7 +458,7 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
     CROW_ROUTE(app, "/api/request/view")
         .methods("GET"_method)([db]() {
-            mongocxx::collection collection = db["inventory"];
+            mongocxx::collection collection = db["request"];
 
             mongocxx::cursor cursor = collection.find({});
 
