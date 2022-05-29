@@ -1,8 +1,8 @@
 import React from "react";
 import { SideBar, NavBar, DataTable } from "../../components";
-import { Home, HomeContainer } from "../admin/styles/admin";
+import { Home, HomeContainer } from "./styles/items";
 
-const Admin = () => {
+const Items = () => {
   return (
     <>
       <Home>
@@ -16,4 +16,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Items;

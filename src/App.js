@@ -1,19 +1,22 @@
 import React from "react";
-import { Admin, User } from "./pages";
+import { Home, Items, User } from "./pages";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<Admin />} />
-            <Route path=":userId" element={<User />} />
+    // <>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home />} />
+          <Route path="/items">
+            <Route index element={<Items />} />
+            <Route path=":itemId" element={<User />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    // </>
   );
 }
 

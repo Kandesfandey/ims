@@ -19,7 +19,6 @@ import {
   ExitToAppIcon,
   StoreIcon,
   CreditCardIcon,
-  PersonOutlineIcon,
   DashboardIcon,
 } from "./styles/sidebar";
 
@@ -35,18 +34,14 @@ const SideBar = () => {
       <CenterContainer>
         <UnorderedList>
           <Title>MAIN</Title>
-          <ListElement>
-            <DashboardIcon className="icon" />
-            <SpanContainer>Dashboard</SpanContainer>
-          </ListElement>
-          <Title>LISTS</Title>
-          <LinkContainer to="/users">
+          <LinkContainer to="/">
             <ListElement>
-              <PersonOutlineIcon />
-              <SpanContainer>Users</SpanContainer>
+              <DashboardIcon />
+              <SpanContainer>Dashboard</SpanContainer>
             </ListElement>
           </LinkContainer>
-          <LinkContainer to="/products">
+          <Title>LISTS</Title>
+          <LinkContainer to="/items">
             <ListElement>
               <StoreIcon />
               <SpanContainer>Products</SpanContainer>
