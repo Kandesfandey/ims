@@ -1,89 +1,90 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
 import { Link } from "react-router-dom";
-import { SidebarContainer, TopContainer } from "./styles/sidebar";
+import {
+  SidebarContainer,
+  TopContainer,
+  LinkContainer,
+  Logo,
+  Divider,
+  CenterContainer,
+  UnorderedList,
+  Title,
+  ListElement,
+  SpanContainer,
+  LocalShippingIcon,
+  SettingsApplicationsIcon,
+  InsertChartIcon,
+  NotificationsNoneIcon,
+  AccountCircleOutlinedIcon,
+  ExitToAppIcon,
+  StoreIcon,
+} from "./styles/sidebar";
 
 const SideBar = () => {
   return (
     <SidebarContainer>
       <TopContainer>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">lamadmin</span>
-        </Link>
+        <LinkContainer to="/">
+          <Logo>lamadmin</Logo>
+        </LinkContainer>
       </TopContainer>
-      <hr />
-      <div className="center">
-        <ul>
-          <p className="title">MAIN</p>
-          <li>
+      <Divider />
+      <CenterContainer>
+        <UnorderedList>
+          <Title>MAIN</Title>
+          <ListElement>
             <DashboardIcon className="icon" />
-            <span>Dashboard</span>
-          </li>
-          <p className="title">LISTS</p>
+            <SpanContainer>Dashboard</SpanContainer>
+          </ListElement>
+          <Title>LISTS</Title>
           <Link to="/users" style={{ textDecoration: "none" }}>
-            <li>
+            <ListElement>
               <PersonOutlineIcon className="icon" />
-              <span>Users</span>
-            </li>
+              <SpanContainer>Users</SpanContainer>
+            </ListElement>
           </Link>
           <Link to="/products" style={{ textDecoration: "none" }}>
-            <li>
-              <StoreIcon className="icon" />
-              <span>Products</span>
-            </li>
+            <ListElement>
+              <StoreIcon />
+              <SpanContainer>Products</SpanContainer>
+            </ListElement>
           </Link>
-          <li>
+          <ListElement>
             <CreditCardIcon className="icon" />
-            <span>Orders</span>
-          </li>
-          <li>
-            <LocalShippingIcon className="icon" />
-            <span>Delivery</span>
-          </li>
-          <p className="title">USEFUL</p>
-          <li>
+            <SpanContainer>Request</SpanContainer>
+          </ListElement>
+          <ListElement>
+            <LocalShippingIcon />
+            <SpanContainer>Delivery</SpanContainer>
+          </ListElement>
+          <Title>USEFUL</Title>
+          <ListElement>
             <InsertChartIcon className="icon" />
-            <span>Stats</span>
-          </li>
-          <li>
-            <NotificationsNoneIcon className="icon" />
-            <span>Notifications</span>
-          </li>
-          <p className="title">SERVICE</p>
-          <li>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <span>System Health</span>
-          </li>
-          <li>
-            <PsychologyOutlinedIcon className="icon" />
-            <span>Logs</span>
-          </li>
-          <li>
-            <SettingsApplicationsIcon className="icon" />
-            <span>Settings</span>
-          </li>
-          <p className="title">USER</p>
-          <li>
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
-          <li>
-            <ExitToAppIcon className="icon" />
-            <span>Logout</span>
-          </li>
-        </ul>
-      </div>
+            <SpanContainer>Stats</SpanContainer>
+          </ListElement>
+          <ListElement>
+            <NotificationsNoneIcon />
+            <SpanContainer>Notifications</SpanContainer>
+          </ListElement>
+          <ListElement>
+            <SettingsApplicationsIcon />
+            <SpanContainer>Settings</SpanContainer>
+          </ListElement>
+          <Title>USER</Title>
+          <ListElement>
+            <AccountCircleOutlinedIcon />
+            <SpanContainer>Profile</SpanContainer>
+          </ListElement>
+          <ListElement>
+            <ExitToAppIcon />
+            <SpanContainer>Logout</SpanContainer>
+          </ListElement>
+        </UnorderedList>
+      </CenterContainer>
     </SidebarContainer>
   );
 };

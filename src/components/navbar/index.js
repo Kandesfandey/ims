@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";

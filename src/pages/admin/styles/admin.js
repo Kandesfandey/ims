@@ -4,4 +4,6 @@ export const Home = styled.div`
   display: flex;
 `;
 
-export const HomeContainer = styled.div``;
+export const HomeContainer = styled.div`
+  flex: 6;
+`;
