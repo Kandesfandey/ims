@@ -1,4 +1,5 @@
 #include "crow.h"
+#include "routes/RequestModule.h"
 
 int main() {
     crow::SimpleApp app;
@@ -8,8 +9,12 @@ int main() {
         return "<h1>Hello World</h1>";
     });
 
-    app.port(5000).multithreaded().run();
+    RequestManagementModule(&app);
+
+    app.port(5000)
+        .multithreaded()
+        .run();
 }
 
 // To run:
-// g++ server.cpp -lpthread -lboost_system
+// g++ server.cpp -lpthread -lboost_system -o app.out
