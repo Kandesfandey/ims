@@ -22,7 +22,7 @@ export const LeftContainer = styled.div`
   flex: 1;
   text-align: center;
   display: flex;
-  align-items: center;
+  align-items: center; 
   justify-content: center;
 `;
 
