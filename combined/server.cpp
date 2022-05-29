@@ -13,28 +13,26 @@ struct Request {
     int quantity;
     int expense;
 
-    std::string convertString()
-    {
-        std::string alpha = "{request_id: '" + request_id + "', name: '" + name + "', project_owner: '" + project_owner+ "', assigned_manager: '" + assigned_manager + "', status: '" + status + "', item_id: '"+ item_id+ ", quantity: " + std::to_string(int(quantity)) + ", expense: "+ std::to_string(int(expense)) +"},"; ;
+    std::string convertString() {
+        std::string alpha = "{request_id: '" + request_id + "', name: '" + name + "', project_owner: '" + project_owner + "', assigned_manager: '" + assigned_manager + "', status: '" + status + "', item_id: '" + item_id + ", quantity: " + std::to_string(int(quantity)) + ", expense: " + std::to_string(int(expense)) + "},";
+        ;
 
         return alpha;
     }
 };
 
-struct Inventory_Lists{
+struct Inventory_Lists {
     std::string name;
     std::string type;
     std::string inventory_id;
     int quantity;
     int life;
 
-    std::string convertString()
-    {
-        std::string alpha = "{ name: '" + name + "', inventory_id: '" + inventory_id + "', type:'" + type + "', quantity: '"+ std::to_string(int(quantity)) + "', life: '"+std::to_string(int(life))+"'}," ;
+    std::string convertString() {
+        std::string alpha = "{ name: '" + name + "', inventory_id: '" + inventory_id + "', type:'" + type + "', quantity: '" + std::to_string(int(quantity)) + "', life: '" + std::to_string(int(life)) + "'},";
 
         return alpha;
     }
-
 };
 
 std::vector<Request> requests_db;
@@ -72,12 +70,11 @@ void RequestManagementModule(crow::SimpleApp *server) {
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
-            for(auto &x:requests_db){
-                if(x.item_id==reqj["request_id"].s()){
+            for (auto &x : requests_db) {
+                if (x.item_id == reqj["request_id"].s()) {
                     x.status = "Pass";
                 }
             }
-
 
             // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
@@ -90,12 +87,11 @@ void RequestManagementModule(crow::SimpleApp *server) {
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
-            for(auto &x:requests_db){
-                if(x.item_id==reqj["request_id"].s()){
+            for (auto &x : requests_db) {
+                if (x.item_id == reqj["request_id"].s()) {
                     x.status = "Failed";
                 }
             }
-
 
             return crow::response(crow::status::ACCEPTED);
         });
@@ -135,8 +131,8 @@ void RequestManagementModule(crow::SimpleApp *server) {
                 int(reqj["quantity"].i()),
             };
 
-            for(auto &x:inventory_lists_db){
-                if(x.inventory_id==reqj["inventory_id"].s()){
+            for (auto &x : inventory_lists_db) {
+                if (x.inventory_id == reqj["inventory_id"].s()) {
                     x = new_request;
                 }
             }
@@ -153,7 +149,7 @@ void RequestManagementModule(crow::SimpleApp *server) {
                 return crow::response(crow::status::BAD_REQUEST);
 
             for (auto i = inventory_lists_db.begin(); i != inventory_lists_db.end(); ++i) {
-                if ((*i).inventory_id==reqj["inventory_id"].s()) {
+                if ((*i).inventory_id == reqj["inventory_id"].s()) {
                     inventory_lists_db.erase(i);
                     i--;
                 }
@@ -170,7 +166,7 @@ int main() {
 
     CROW_ROUTE(app, "/")
     ([]() {
-        return "<h1>Hello World</h1>";
+        return "<h1>IMS</h1>";
     });
 
     CROW_ROUTE(app, "/api/list/view")
@@ -179,11 +175,11 @@ int main() {
 
         crow::json::wvalue x;
 
-        for(auto &x:inventory_lists_db){
-            main_str+=x.convertString();
+        for (auto &x : inventory_lists_db) {
+            main_str += x.convertString();
         }
 
-        main_str+="]";
+        main_str += "]";
 
         return main_str;
     });
@@ -194,11 +190,11 @@ int main() {
 
         crow::json::wvalue x;
 
-        for(auto &x:requests_db){
-            main_str+=x.convertString();
+        for (auto &x : requests_db) {
+            main_str += x.convertString();
         }
 
-        main_str+="]";
+        main_str += "]";
 
         return main_str;
     });
