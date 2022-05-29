@@ -23,6 +23,7 @@ export const NavbarContainer = styled.div`
   align-items: center;
   font-size: 14px;
   color: #555;
+  background-color: #fefbe7;
 `;
 
 export const WrapperContainer = styled.div`

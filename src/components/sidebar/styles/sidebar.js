@@ -16,7 +16,7 @@ export const SidebarContainer = styled.div`
   flex: 1;
   border-right: 0.5px solid rgb(230, 227, 227);
   min-height: 100vh;
-  background-color: white;
+  background-color: #fefbe7;
 `;
 
 export const TopContainer = styled.div`
