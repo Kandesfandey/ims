@@ -163,12 +163,17 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
     CROW_ROUTE(app, "/api/bill/view")
     ([db]() {
+
+        mongocxx::collection collection = db["billing"];
+
+        mongocxx::cursor cursor = collection.find({});
+
         std::string main_str = "[";
 
         crow::json::wvalue x;
 
-        for (auto &x : billing_db) {
-            main_str += x.convertString();
+        for(auto doc : cursor) {
+            main_str += std::to_string(bsoncxx::to_json(doc));
         }
 
         main_str += "]";
@@ -328,12 +333,17 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
     CROW_ROUTE(app, "/api/list/view")
     ([db]() {
+
+        mongocxx::collection collection = db["inventory"];
+
+        mongocxx::cursor cursor = collection.find({});
+
         std::string main_str = "[";
 
         crow::json::wvalue x;
 
-        for (auto &x : inventory_lists_db) {
-            main_str += x.convertString();
+        for(auto doc : cursor) {
+            main_str += std::to_string(bsoncxx::to_json(doc));
         }
 
         main_str += "]";
@@ -345,9 +355,17 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
     ([db]() {
         std::string main_str;
 
-        for (auto &x : inventory_lists_db) {
+        mongocxx::collection collection = db["inventory"];
+
+        mongocxx::cursor cursor = collection.find({});
+
+        for (auto &x : cursor) {
             if (x.available == 0) {
                 x.available = 1;
+
+                collection.update_one(query << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
+                    query << "$set" << open_document <<
+                    "available" << 1 << close_document << bsoncxx::builder::stream::finalize);
                 main_str = "Server Assigned " + x.inventory_id;
                 break;
             } else {
@@ -449,14 +467,16 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
     CROW_ROUTE(app, "/api/request/view")
         .methods("GET"_method)([db]() {
-            mongocxx::collection collection = db["request"];
+            mongocxx::collection collection = db["inventory"];
+
+            mongocxx::cursor cursor = collection.find({});
 
             std::string main_str = "[";
 
             crow::json::wvalue x;
 
-            for (auto &x : requests_db) {
-                main_str += x.convertString();
+            for(auto doc : cursor) {
+                main_str += std::to_string(bsoncxx::to_json(doc));
             }
 
             main_str += "]";
