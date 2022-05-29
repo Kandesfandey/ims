@@ -170,7 +170,7 @@ const DataTable = () => {
     <DataTableContainer>
       <DataTableTitle>
         Items
-        <DataTableLink to="/users/new">Add New</DataTableLink>
+        <DataTableLink to="/items/new">Add New</DataTableLink>
       </DataTableTitle>
       <DataGrid
         rows={data}

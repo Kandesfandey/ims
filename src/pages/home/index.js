@@ -1,5 +1,5 @@
 import React from "react";
-import { SideBar, NavBar, DataTable } from "../../components";
+import { SideBar, NavBar } from "../../components";
 import { HomeContainer, HomeInnerContainer } from "./styles/home";
 
 const Home = () => {
@@ -8,7 +8,7 @@ const Home = () => {
       <SideBar />
       <HomeInnerContainer>
         <NavBar />
-        <DataTable />
+        {/* <DataTable /> */}
       </HomeInnerContainer>
     </HomeContainer>
   );
