@@ -9,3 +9,10 @@ export const HomeContainer = styled.div`
 export const HomeInnerContainer = styled.div`
   flex: 6;
 `;
+
+export const ChartsContainer = styled.div`
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  padding: 150px 20px;
+`;
