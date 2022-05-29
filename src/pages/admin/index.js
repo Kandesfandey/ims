@@ -1,10 +1,10 @@
 import React from "react";
-import { DataTables } from "../../components";
+import { SideBar } from "../../components";
 
 const Admin = () => {
   return (
     <>
-      <DataTables />
+      <SideBar />
     </>
   );
 };
