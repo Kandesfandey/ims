@@ -1,5 +1,13 @@
 import styled from "styled-components/macro";
 import { Link as ReachRouterLink } from "react-router-dom";
+import { LocalShipping, InsertChart } from "@mui/icons-material";
+import {
+  NotificationsNone,
+  AccountCircleOutlined,
+  SettingsApplications,
+  ExitToApp,
+  Store,
+} from "@mui/icons-material";
 
 export const SidebarContainer = styled.div`
   flex: 1;
@@ -69,4 +77,38 @@ export const SpanContainer = styled.span`
   font-weight: 600;
   color: #888;
   margin-left: 10px;
+`;
+
+export const LocalShippingIcon = styled(LocalShipping)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const AccountCircleOutlinedIcon = styled(AccountCircleOutlined)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const NotificationsNoneIcon = styled(NotificationsNone)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const SettingsApplicationsIcon = styled(SettingsApplications)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const InsertChartIcon = styled(InsertChart)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const ExitToAppIcon = styled(ExitToApp)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+export const StoreIcon = styled(Store)`
+  font-size: 18px;
+  color: #7451f8;
 `;

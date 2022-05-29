@@ -1,16 +1,8 @@
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
 import { Link } from "react-router-dom";
 import {
   SidebarContainer,
@@ -23,6 +15,13 @@ import {
   Title,
   ListElement,
   SpanContainer,
+  LocalShippingIcon,
+  SettingsApplicationsIcon,
+  InsertChartIcon,
+  NotificationsNoneIcon,
+  AccountCircleOutlinedIcon,
+  ExitToAppIcon,
+  StoreIcon,
 } from "./styles/sidebar";
 
 const SideBar = () => {
@@ -50,16 +49,16 @@ const SideBar = () => {
           </Link>
           <Link to="/products" style={{ textDecoration: "none" }}>
             <ListElement>
-              <StoreIcon className="icon" />
+              <StoreIcon />
               <SpanContainer>Products</SpanContainer>
             </ListElement>
           </Link>
           <ListElement>
             <CreditCardIcon className="icon" />
-            <SpanContainer>Orders</SpanContainer>
+            <SpanContainer>Request</SpanContainer>
           </ListElement>
           <ListElement>
-            <LocalShippingIcon className="icon" />
+            <LocalShippingIcon />
             <SpanContainer>Delivery</SpanContainer>
           </ListElement>
           <Title>USEFUL</Title>
@@ -68,29 +67,20 @@ const SideBar = () => {
             <SpanContainer>Stats</SpanContainer>
           </ListElement>
           <ListElement>
-            <NotificationsNoneIcon className="icon" />
+            <NotificationsNoneIcon />
             <SpanContainer>Notifications</SpanContainer>
           </ListElement>
-          <Title>SERVICE</Title>
           <ListElement>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <SpanContainer>System Health</SpanContainer>
-          </ListElement>
-          <ListElement>
-            <PsychologyOutlinedIcon className="icon" />
-            <SpanContainer>Logs</SpanContainer>
-          </ListElement>
-          <ListElement>
-            <SettingsApplicationsIcon className="icon" />
+            <SettingsApplicationsIcon />
             <SpanContainer>Settings</SpanContainer>
           </ListElement>
           <Title>USER</Title>
           <ListElement>
-            <AccountCircleOutlinedIcon className="icon" />
+            <AccountCircleOutlinedIcon />
             <SpanContainer>Profile</SpanContainer>
           </ListElement>
           <ListElement>
-            <ExitToAppIcon className="icon" />
+            <ExitToAppIcon />
             <SpanContainer>Logout</SpanContainer>
           </ListElement>
         </UnorderedList>
