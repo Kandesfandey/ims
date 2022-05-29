@@ -12,78 +12,89 @@ import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSyst
 import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
-import { SidebarContainer, TopContainer } from "./styles/sidebar";
+import {
+  SidebarContainer,
+  TopContainer,
+  LinkContainer,
+  Logo,
+  Divider,
+  CenterContainer,
+  UnorderedList,
+  Title,
+  ListElement,
+  SpanContainer,
+} from "./styles/sidebar";
 
 const SideBar = () => {
   return (
     <SidebarContainer>
       <TopContainer>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">lamadmin</span>
-        </Link>
+        <LinkContainer to="/">
+          <Logo>lamadmin</Logo>
+        </LinkContainer>
       </TopContainer>
-      <hr />
-      <div className="center">
-        <ul>
-          <p className="title">MAIN</p>
-          <li>
+      <Divider />
+      <CenterContainer>
+        <UnorderedList>
+          <Title>MAIN</Title>
+          <ListElement>
             <DashboardIcon className="icon" />
-            <span>Dashboard</span>
-          </li>
-          <p className="title">LISTS</p>
+            <SpanContainer>Dashboard</SpanContainer>
+          </ListElement>
+          <Title>LISTS</Title>
           <Link to="/users" style={{ textDecoration: "none" }}>
-            <li>
+            <ListElement>
               <PersonOutlineIcon className="icon" />
-              <span>Users</span>
-            </li>
+              <SpanContainer>Users</SpanContainer>
+            </ListElement>
           </Link>
           <Link to="/products" style={{ textDecoration: "none" }}>
-            <li>
+            <ListElement>
               <StoreIcon className="icon" />
-              <span>Products</span>
-            </li>
+              <SpanContainer>Products</SpanContainer>
+            </ListElement>
           </Link>
-          <li>
+          <ListElement>
             <CreditCardIcon className="icon" />
-            <span>Orders</span>
-          </li>
-          <li>
+            <SpanContainer>Orders</SpanContainer>
+          </ListElement>
+          <ListElement>
             <LocalShippingIcon className="icon" />
-            <span>Delivery</span>
-          </li>
-          <p className="title">USEFUL</p>
-          <li>
+            <SpanContainer>Delivery</SpanContainer>
+          </ListElement>
+          <Title>USEFUL</Title>
+          <ListElement>
             <InsertChartIcon className="icon" />
-            <span>Stats</span>
-          </li>
-          <li>
+            <SpanContainer>Stats</SpanContainer>
+          </ListElement>
+          <ListElement>
             <NotificationsNoneIcon className="icon" />
-            <span>Notifications</span>
-          </li>
-          <p className="title">SERVICE</p>
-          <li>
+            <SpanContainer>Notifications</SpanContainer>
+          </ListElement>
+          <Title>SERVICE</Title>
+          <ListElement>
             <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <span>System Health</span>
-          </li>
-          <li>
+            <SpanContainer>System Health</SpanContainer>
+          </ListElement>
+          <ListElement>
             <PsychologyOutlinedIcon className="icon" />
-            <span>Logs</span>
-          </li>
-          <li>
+            <SpanContainer>Logs</SpanContainer>
+          </ListElement>
+          <ListElement>
             <SettingsApplicationsIcon className="icon" />
-            <span>Settings</span>
-          </li>
-          <p className="title">USER</p>
-          <li>
+            <SpanContainer>Settings</SpanContainer>
+          </ListElement>
+          <Title>USER</Title>
+          <ListElement>
             <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
-          <li>
+            <SpanContainer>Profile</SpanContainer>
+          </ListElement>
+          <ListElement>
             <ExitToAppIcon className="icon" />
-            <span>Logout</span>
-          </li>
-        </ul>
-      </div>
+            <SpanContainer>Logout</SpanContainer>
+          </ListElement>
+        </UnorderedList>
+      </CenterContainer>
     </SidebarContainer>
   );
 };

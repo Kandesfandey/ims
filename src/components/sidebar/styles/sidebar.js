@@ -1,4 +1,5 @@
 import styled from "styled-components/macro";
+import { Link as ReachRouterLink } from "react-router-dom";
 
 export const SidebarContainer = styled.div`
   flex: 1;
@@ -14,4 +15,58 @@ export const TopContainer = styled.div`
   justify-content: center;
 `;
 
-// export const LinkContainer = styled(Link)``
+export const LinkContainer = styled(ReachRouterLink)`
+  text-decoration: none;
+`;
+
+export const Logo = styled.span`
+  font-size: 20px;
+  font-weight: bold;
+  color: #6439ff;
+`;
+
+export const Divider = styled.hr`
+  height: 0;
+  border: 0.5px solid rgb(230, 227, 227);
+`;
+
+export const CenterContainer = styled.div`
+  padding-left: 10px;
+`;
+
+export const UnorderedList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+export const Title = styled.p`
+  font-size: 10px;
+  font-weight: bold;
+  color: #999;
+  margin-top: 15px;
+  margin-bottom: 5px;
+`;
+
+export const ListElement = styled.li`
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ece8ff;
+  }
+
+  .icon {
+    font-size: 18px;
+    color: #7451f8;
+  }
+`;
+
+export const SpanContainer = styled.span`
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  margin-left: 10px;
+`;
