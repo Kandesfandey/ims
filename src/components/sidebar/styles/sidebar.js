@@ -43,7 +43,6 @@ export const Divider = styled.hr`
 
 export const CenterContainer = styled.div`
   padding-left: 10px;
-  /* display: flex; */
   padding-right: 10px;
   padding-top: 150px;
 `;

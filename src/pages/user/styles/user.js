@@ -12,7 +12,6 @@ export const TopContainer = styled.div`
   padding: 20px;
   display: flex;
   gap: 20px;
-  /* height: 100%; */
 `;
 export const LeftContainer = styled.div`
   flex: 1;
@@ -63,18 +62,4 @@ export const ItemKeyContainer = styled.span`
 
 export const ItemValueContainer = styled.span`
   font-weight: 300;
-`;
-export const RightContainer = styled.div`
-  flex: 2;
-`;
-export const BottomContainer = styled.div`
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  padding: 20px;
-  margin: 10px 20px;
-`;
-export const TitleContainer = styled.h1`
-  font-size: 16px;
-  color: lightgray;
-  margin-bottom: 20px;
 `;
