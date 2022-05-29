@@ -4,6 +4,7 @@ import { DriveFolderUploadOutlined } from "@mui/icons-material";
 export const NewContainer = styled.div`
   width: 100%;
   display: flex;
+  background-color: #fefbe7;
 `;
 
 export const NewContainerContainer = styled.div`
@@ -22,12 +23,12 @@ export const LeftContainer = styled.div`
   flex: 1;
   text-align: center;
   display: flex;
-  align-items: center; 
+  align-items: center;
   justify-content: center;
 `;
 
 export const H1Container = styled.h1`
-  color: lightgray;
+  color: #7451f8;
   font-size: 20px;
 `;
 
@@ -68,13 +69,14 @@ export const InputContainer = styled.input`
   padding: 5px;
   border: none;
   border-bottom: 1px solid gray;
+  background-color: #fefbe7;
 `;
 
 export const ButtonContainer = styled.button`
   width: 150px;
   padding: 10px;
   border: none;
-  background-color: teal;
+  background-color: #7451f8;
   color: white;
   font-weight: bold;
   cursor: pointer;

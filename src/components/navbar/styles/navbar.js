@@ -42,14 +42,13 @@ export const SearchContainer = styled.div`
 `;
 
 export const InputContainer = styled.input`
-  input {
-    border: none;
-    outline: none;
-    background: transparent;
+  border: none;
+  outline: none;
+  background: transparent;
+  background-color: #fefbe7;
 
-    &::placeholder {
-      font-size: 12px;
-    }
+  &::placeholder {
+    font-size: 12px;
   }
 `;
 
