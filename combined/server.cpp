@@ -1,6 +1,7 @@
 #include "crow.h"
 #include "string"
 #include "vector"
+#include "unordered_set"
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
@@ -84,25 +85,33 @@ std::vector<Billing> billing_db;
 std::vector<Request> requests_db;
 std::vector<Inventory_Lists> inventory_lists_db;
 
-void RapidUpdateModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
+void LiveHandlerModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
     crow::SimpleApp &app = *server;
     mongocxx::database &db = *db_loc;
+
+    std::mutex mtx;
+    std::unordered_set<crow::websocket::connection *> &iusers = *inventory_list_users;
+    std::unordered_set<crow::websocket::connection *> &rusers = *request_list_users;
 
     CROW_ROUTE(app, "/api/list/view/live")
         .websocket()
         .onopen([&](crow::websocket::connection &conn) {
-            // do_something();
+            CROW_LOG_INFO << "new websocket connection from " << conn.get_remote_ip();
+            std::lock_guard<std::mutex> _(mtx);
+            iusers.insert(&conn);
         })
         .onclose([&](crow::websocket::connection &conn, const std::string &reason) {
-            // do_something();
+            CROW_LOG_INFO << "websocket connection closed: " << reason;
+            std::lock_guard<std::mutex> _(mtx);
+            iusers.erase(&conn);
         })
-        .onmessage([&](crow::websocket::connection & /*conn*/, const std::string &data, bool is_binary) {
-            if (is_binary) {
-                // do_something(data);
-
-            } else {
-                // do_something_else(data);
-            }
+        .onmessage([&](crow::websocket::connection &conn, const std::string &data, bool is_binary) {
+            std::lock_guard<std::mutex> _(mtx);
+            for (auto u : iusers)
+                if (is_binary)
+                    u->send_binary(data);
+                else
+                    u->send_text(data);
         });
 }
 
@@ -168,9 +177,10 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
     });
 }
 
-void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
+void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
     crow::SimpleApp &app = *server;
     mongocxx::database &db = *db_loc;
+    std::unordered_set<crow::websocket::connection *> &users = *inventory_list_users;
 
     CROW_ROUTE(app, "/api/list/add")
         .methods("POST"_method)([db](const crow::request &req) {
@@ -349,9 +359,10 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
     });
 }
 
-void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
+void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users) {
     crow::SimpleApp &app = *server;
     mongocxx::database &db = *db_loc;
+    std::unordered_set<crow::websocket::connection *> &users = *request_list_users;
 
     CROW_ROUTE(app, "/api/request/add")
         .methods("POST"_method)([db](const crow::request &req) {
@@ -463,14 +474,19 @@ int main() {
     mongocxx::client conn{uri};
     mongocxx::database db = conn["IMS"];
 
+    // WS
+    std::unordered_set<crow::websocket::connection *> inventory_list_users;
+    std::unordered_set<crow::websocket::connection *> request_list_users;
+
     CROW_ROUTE(app, "/")
     ([db]() {
         return "<h1>IMS Status OK</h1>";
     });
 
-    RequestManagementModule(&app, &db);
+    LiveHandlerModule(&app, &db, &request_list_users, &inventory_list_users);
     BillingManagementModule(&app, &db);
-    InventoryManagementModule(&app, &db);
+    RequestManagementModule(&app, &db, &request_list_users);
+    InventoryManagementModule(&app, &db, &inventory_list_users);
 
     app.port(5000)
         .multithreaded()
