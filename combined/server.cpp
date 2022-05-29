@@ -15,28 +15,54 @@ struct Request {
 
     std::string convertString()
     {
-        std::string alpha = "{request_id: '" + request_id + "', name: '" + name + "', project_owner: '" + project_owner+ "', assigned_manager: '" + assigned_manager + "', status: '" + status + "', item_id: '"+ item_id+ ", quantity: " + std::to_string(int(quantity)) + ", expense: "+ std::to_string(int(expense)) +"},"; ;
+        std::string alpha = "{'request_id': '" + request_id + "', 'name': '" + name + "', 'project_owner': '" + project_owner+ "', 'assigned_manager': '" + assigned_manager + "', 'status': '" + status + "', 'item_id': '"+ item_id+ ", 'quantity': " + std::to_string(int(quantity)) + ", 'expense': "+ std::to_string(int(expense)) +"}|"; ;
 
         return alpha;
     }
+};
+
+struct Owner{
+    std::string owner_id;
 };
 
 struct Inventory_Lists{
     std::string name;
     std::string type;
     std::string inventory_id;
+    std::string priority;
+    std::string expense_type;
+
+    int available;
     int quantity;
     int life;
 
     std::string convertString()
     {
-        std::string alpha = "{ name: '" + name + "', inventory_id: '" + inventory_id + "', type:'" + type + "', quantity: '"+ std::to_string(int(quantity)) + "', life: '"+std::to_string(int(life))+"'}," ;
+        std::string alpha = "{ 'name': '" + name + "', 'inventory_id': '" + inventory_id + "', 'type':'" + type + "', 'priority': '" + priority + "', 'quantity': '"+ std::to_string(int(quantity)) + "', 'available': '" + std::to_string(int(available)) + ", 'expense_type': '" + expense_type + "', 'life': '"+std::to_string(int(life))+"'}|" ;
 
         return alpha;
     }
 
 };
 
+struct Billing{
+    std::string bill_id;
+    std::string item_id;
+    std::string user_id;
+    std::string manager_id;
+
+    int price;
+    int quantity;
+
+    std::string convertString()
+    {
+        std::string alpha =  "{'bill_id': '"+ bill_id + "', 'item_id': '" + item_id + "', 'user_id': '" + user_id + "', 'manager_id': '"+ manager_id + "', 'price': '" + std::to_string(int(price)) + "', 'quantity': '" + std::to_string(int(quantity)) +"' }|";
+
+        return alpha;
+    }
+};
+
+std::vector<Billing> billing_db;
 std::vector<Request> requests_db;
 std::vector<Inventory_Lists> inventory_lists_db;
 
@@ -110,11 +136,36 @@ void RequestManagementModule(crow::SimpleApp *server) {
                 reqj["name"].s(),
                 reqj["type"].s(),
                 reqj["inventory_id"].s(),
+                reqj["priority"].s(),
+                reqj["expense_type"].s(),
+                int(reqj["available"].i()),
                 int(reqj["life"].i()),
                 int(reqj["quantity"].i()),
             };
 
             inventory_lists_db.push_back(new_request);
+
+            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
+
+            return crow::response(crow::status::ACCEPTED);
+        });
+
+    CROW_ROUTE(app, "/api/bill/add")
+        .methods("POST"_method)([](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+            Billing new_request{
+                reqj["bill_id"].s(),
+                reqj["item_id"].s(),
+                reqj["user_id"].s(),
+                reqj["manager_id"].s(),
+                int(reqj["price"].i()),
+                int(reqj["quantity"].i()),
+            };
+
+            billing_db.push_back(new_request);
 
             // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
@@ -131,6 +182,9 @@ void RequestManagementModule(crow::SimpleApp *server) {
                 reqj["name"].s(),
                 reqj["type"].s(),
                 reqj["inventory_id"].s(),
+                reqj["priority"].s(),
+                reqj["expense_type"].s(),
+                int(reqj["available"].i()),
                 int(reqj["life"].i()),
                 int(reqj["quantity"].i()),
             };
@@ -138,6 +192,24 @@ void RequestManagementModule(crow::SimpleApp *server) {
             for(auto &x:inventory_lists_db){
                 if(x.inventory_id==reqj["inventory_id"].s()){
                     x = new_request;
+                }
+            }
+
+            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
+
+            return crow::response(crow::status::ACCEPTED);
+        });
+
+    CROW_ROUTE(app, "/api/list/priority")
+        .methods("POST"_method)([](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+
+            for(auto &x:inventory_lists_db){
+                if(x.inventory_id==reqj["inventory_id"].s()){
+                    x.priority = reqj["priority"].s();
                 }
             }
 
@@ -188,6 +260,23 @@ int main() {
         return main_str;
     });
 
+    CROW_ROUTE(app, "/api/list/assign_server")
+    ([]() {
+        std::string main_str;
+
+        for(auto &x:inventory_lists_db){
+            if(x.available == 0){
+                x.available = 1;
+                main_str = "Server Assigned " +x.inventory_id;
+                break;
+            } else {
+                main_str = "No Server are currently Free";
+            }
+        }
+
+        return main_str;
+    });
+
     CROW_ROUTE(app, "/api/request/view")
     ([]() {
         std::string main_str = "[";
@@ -195,6 +284,21 @@ int main() {
         crow::json::wvalue x;
 
         for(auto &x:requests_db){
+            main_str+=x.convertString();
+        }
+
+        main_str+="]";
+
+        return main_str;
+    });
+
+    CROW_ROUTE(app, "/api/bill/view")
+    ([]() {
+        std::string main_str = "[";
+
+        crow::json::wvalue x;
+
+        for(auto &x:billing_db){
             main_str+=x.convertString();
         }
 
