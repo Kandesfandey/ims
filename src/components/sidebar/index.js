@@ -27,7 +27,7 @@ const SideBar = () => {
     <SidebarContainer>
       <TopContainer>
         <LinkContainer to="/">
-          <Logo>BAAM's INVENTORY</Logo>
+          <Logo>BAAM's Inventory</Logo>
         </LinkContainer>
       </TopContainer>
       <Divider />
