@@ -1,11 +1,20 @@
 import React from "react";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
-import { InputContainer, ItemsContainer, NavbarContainer, SearchContainer, WrapperContainer, ItemContainer } from "./styles";
+
+import {
+  InputContainer,
+  ItemsContainer,
+  NavbarContainer,
+  SearchContainer,
+  WrapperContainer,
+  ItemContainer,
+  SearchOutlinedIcon,
+  LanguageOutlinedIcon,
+  FullscreenExitOutlinedIcon,
+  NotificationsNoneOutlinedIcon,
+  ChatBubbleOutlineOutlinedIcon,
+  ListOutlinedIcon,
+  Avatar,
+} from "./styles/navbar";
 
 const Navbar = () => {
   return (
@@ -36,10 +45,9 @@ const Navbar = () => {
             <ListOutlinedIcon className="icon" />
           </ItemContainer>
           <ItemContainer>
-            <img
+            <Avatar
               src="https://images.pexels.com/photos/941693/pexels-photo-941693.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
               alt=""
-              className="avatar"
             />
           </ItemContainer>
         </ItemsContainer>

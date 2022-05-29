@@ -7,6 +7,9 @@ import {
   SettingsApplications,
   ExitToApp,
   Store,
+  CreditCard,
+  PersonOutline,
+  Dashboard,
 } from "@mui/icons-material";
 
 export const SidebarContainer = styled.div`
@@ -108,7 +111,23 @@ export const ExitToAppIcon = styled(ExitToApp)`
   font-size: 18px;
   color: #7451f8;
 `;
+
 export const StoreIcon = styled(Store)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const CreditCardIcon = styled(CreditCard)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const PersonOutlineIcon = styled(PersonOutline)`
+  font-size: 18px;
+  color: #7451f8;
+`;
+
+export const DashboardIcon = styled(Dashboard)`
   font-size: 18px;
   color: #7451f8;
 `;

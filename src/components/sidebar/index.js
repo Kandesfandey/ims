@@ -1,9 +1,5 @@
 import React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
 
-import { Link } from "react-router-dom";
 import {
   SidebarContainer,
   TopContainer,
@@ -22,6 +18,9 @@ import {
   AccountCircleOutlinedIcon,
   ExitToAppIcon,
   StoreIcon,
+  CreditCardIcon,
+  PersonOutlineIcon,
+  DashboardIcon,
 } from "./styles/sidebar";
 
 const SideBar = () => {
@@ -41,20 +40,20 @@ const SideBar = () => {
             <SpanContainer>Dashboard</SpanContainer>
           </ListElement>
           <Title>LISTS</Title>
-          <Link to="/users" style={{ textDecoration: "none" }}>
+          <LinkContainer to="/users">
             <ListElement>
-              <PersonOutlineIcon className="icon" />
+              <PersonOutlineIcon />
               <SpanContainer>Users</SpanContainer>
             </ListElement>
-          </Link>
-          <Link to="/products" style={{ textDecoration: "none" }}>
+          </LinkContainer>
+          <LinkContainer to="/products">
             <ListElement>
               <StoreIcon />
               <SpanContainer>Products</SpanContainer>
             </ListElement>
-          </Link>
+          </LinkContainer>
           <ListElement>
-            <CreditCardIcon className="icon" />
+            <CreditCardIcon />
             <SpanContainer>Request</SpanContainer>
           </ListElement>
           <ListElement>
@@ -63,7 +62,7 @@ const SideBar = () => {
           </ListElement>
           <Title>USEFUL</Title>
           <ListElement>
-            <InsertChartIcon className="icon" />
+            <InsertChartIcon />
             <SpanContainer>Stats</SpanContainer>
           </ListElement>
           <ListElement>
