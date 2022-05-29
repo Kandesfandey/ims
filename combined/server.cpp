@@ -321,7 +321,7 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
 
             auto builder = bsoncxx::builder::stream::document{};
 
-            collection.delete_one(builder << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize);
+            collection.delete_one(builder << "id" << reqj["id"].s() << bsoncxx::builder::stream::finalize);
 
             // for (auto i = inventory_lists_db.begin(); i != inventory_lists_db.end(); ++i) {
             //     if ((*i).inventory_id == reqj["inventory_id"].s()) {
@@ -482,6 +482,25 @@ void RequestManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::dat
 
             return main_str;
         });
+
+    CROW_ROUTE(app, "/api/request/delete")
+        .methods("POST"_method)([db](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+            mongocxx::collection collection = db["request"];
+
+            auto builder = bsoncxx::builder::stream::document{};
+
+            bsoncxx::stdx::optional<mongocxx::result::delete_result> result = collection.delete_one(builder << "request_id" << reqj["id"].s() << bsoncxx::builder::stream::finalize);
+
+            if (result) {
+                std::cout << result->deleted_count() << "\n";
+            }
+
+            return crow::response(crow::status::OK);
+        });
 }
 
 int main() {
@@ -495,10 +514,8 @@ int main() {
       .global()
         .headers("X-Custom-Header", "Upgrade-Insecure-Requests")
         .methods("POST"_method, "GET"_method)
-      .prefix("/cors")
-        .origin("*")
-      .prefix("/nocors")
-        .ignore();
+      .prefix("/")
+        .origin("*");
     // clang-format on
 
     // Database
