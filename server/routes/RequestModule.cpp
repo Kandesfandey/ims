@@ -26,7 +26,7 @@ void RequestManagementModule(crow::SimpleApp *server) {
 
             requests_db.push_back(new_request);
 
-            CROW_LOG_INFO << "Pushed: " << *requests_db.end();
+            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
             return crow::response(crow::status::ACCEPTED);
         });
