@@ -69,16 +69,18 @@ void RapidUpdateModule(crow::SimpleApp *server) {
     CROW_ROUTE(app, "/api/list/view/live")
         .websocket()
         .onopen([&](crow::websocket::connection &conn) {
-            do_something();
+            // do_something();
         })
         .onclose([&](crow::websocket::connection &conn, const std::string &reason) {
-            do_something();
+            // do_something();
         })
         .onmessage([&](crow::websocket::connection & /*conn*/, const std::string &data, bool is_binary) {
-            if (is_binary)
-                do_something(data);
-            else
-                do_something_else(data);
+            if (is_binary) {
+                // do_something(data);
+
+            } else {
+                // do_something_else(data);
+            }
         });
 }
 
