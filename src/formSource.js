@@ -43,35 +43,47 @@ export const itemInputs = [
   },
 ];
 
-export const productInputs = [
+export const requestInputs = [
   {
     id: 1,
     label: "Title",
     type: "text",
-    placeholder: "Apple Macbook Pro",
+    placeholder: "Title",
   },
   {
     id: 2,
-    label: "Description",
+    label: "Project Owner",
     type: "text",
-    placeholder: "Description",
+    placeholder: "Enter Project Owner",
   },
   {
     id: 3,
-    label: "Category",
+    label: "Assigned Manager",
     type: "text",
-    placeholder: "Computers",
+    placeholder: "Enter Assigned Manager",
   },
   {
     id: 4,
-    label: "Price",
+    label: "Status",
     type: "text",
-    placeholder: "100",
+    placeholder: "Pending",
   },
   {
     id: 5,
-    label: "Stock",
+    label: "Item ID",
     type: "text",
-    placeholder: "in stock",
+    placeholder: "1",
+  },
+  {
+    id: 6,
+    label: "Quantity",
+    type: "number",
+    placeholder: "1",
+  },
+  {
+    id: 7,
+    label: "Expense",
+    type: "number",
+    placeholder: "1000",
   },
 ];

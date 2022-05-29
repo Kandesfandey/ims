@@ -16,8 +16,8 @@ import {
   RightContainer,
   TopBottomContainer,
   ButtonContainer,
-} from "./styles/new";
-const New = ({ inputs, title }) => {
+} from "./styles/newrequest";
+const NewRequest = ({ inputs, title }) => {
   const [file, setFile] = useState("");
 
   return (
@@ -26,7 +26,7 @@ const New = ({ inputs, title }) => {
       <NewContainerContainer>
         <Navbar />
         <TopBottomContainer>
-          <H1Container>Create New Inventory item</H1Container>
+          <H1Container>Create New Request</H1Container>
         </TopBottomContainer>
         <TopBottomContainer>
           <LeftContainer>
@@ -71,4 +71,4 @@ const New = ({ inputs, title }) => {
   );
 };
 
-export default New;
+export default NewRequest;
