@@ -11,6 +11,7 @@ export const TopContainer = styled.div`
   padding: 20px;
   display: flex;
   gap: 20px;
+  /* height: 100%; */
 `
 export const LeftContainer = styled.div`
   flex: 1;
@@ -18,6 +19,7 @@ export const LeftContainer = styled.div`
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
   padding: 20px;
   position: relative;
+  
 `
 export const EditButtonContainer = styled.div`
           position: absolute;

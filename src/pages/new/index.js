@@ -4,7 +4,7 @@ import Navbar from "../../components/navbar";
 import { useState } from "react";
 import {
   NewContainer,
-  NewContainerContainer,
+  NewContainerContainer, 
   FormContainer,
   FormInputContainer,
   H1Container,
@@ -26,7 +26,7 @@ const New = ({ inputs, title }) => {
       <NewContainerContainer>
         <Navbar />
         <TopBottomContainer>
-          <H1Container>{title}</H1Container>
+          <H1Container>Create New Inventory Item</H1Container>
         </TopBottomContainer>
         <TopBottomContainer>
           <LeftContainer>
