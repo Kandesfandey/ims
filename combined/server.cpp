@@ -277,24 +277,34 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
     mongocxx::database &db = *db_loc;
 
     CROW_ROUTE(app, "/api/request/add")
-        .methods("POST"_method)([](const crow::request &req) {
+        .methods("POST"_method)([db](const crow::request &req) {
             auto reqj = crow::json::load(req.body);
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
+            mongocxx::collection collection = db["request"];
 
-            Request new_request{
-                reqj["request_id"].s(),
-                reqj["name"].s(),
-                reqj["project_owner"].s(),
-                reqj["assigned_manager"].s(),
-                "Pending",
-                reqj["item_id"].s(),
+            auto builder = bsoncxx::builder::stream::document{};
+            bsoncxx::document::value doc_value = builder
+                                                 << "request_id"
+                                                 << reqj["request_id"].s()
+                                                 << "name"
+                                                 << reqj["name"].s()
+                                                 << "project_owner"
+                                                 << reqj["project_owner"].s()
+                                                 << "assigned_manager"
+                                                 << reqj["assigned_manager"].s()
+                                                 << "status"
+                                                 << "Pending"
+                                                 << "item_id"
+                                                 << reqj["item_id"].s()
+                                                 << "quantity"
+                                                 << int(reqj["quantity"].i())
+                                                 << "expense"
+                                                 << int(reqj["expense"].i())
+                                                 << bsoncxx::builder::stream::finalize;
+            bsoncxx::document::view docview = doc_value.view();
 
-                int(reqj["quantity"].i()),
-                int(reqj["expense"].i()),
-            };
-
-            requests_db.push_back(new_request);
+            bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(docview);
 
             return crow::response(crow::status::OK);
         });
