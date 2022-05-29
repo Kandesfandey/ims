@@ -44,7 +44,6 @@ export const Divider = styled.hr`
 export const CenterContainer = styled.div`
   padding-left: 10px;
   padding-right: 10px;
-  padding-top: 150px;
 `;
 
 export const UnorderedList = styled.ul`
