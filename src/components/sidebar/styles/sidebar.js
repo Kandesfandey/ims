@@ -64,6 +64,7 @@ export const ListElement = styled.li`
   align-items: center;
   padding: 5px;
   cursor: pointer;
+  margin-right: 10px;
 
   &:hover {
     background-color: #ece8ff;
