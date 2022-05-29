@@ -127,8 +127,6 @@ void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
 
             billing_db.push_back(new_request);
 
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
-
             return crow::response(crow::status::ACCEPTED);
         });
 
@@ -171,8 +169,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
 
             inventory_lists_db.push_back(new_request);
 
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
-
             return crow::response(crow::status::ACCEPTED);
         });
 
@@ -199,8 +195,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
                 }
             }
 
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
-
             return crow::response(crow::status::ACCEPTED);
         });
 
@@ -215,8 +209,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
                     x.priority = reqj["priority"].s();
                 }
             }
-
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
             return crow::response(crow::status::ACCEPTED);
         });
@@ -233,8 +225,6 @@ void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_l
                     i--;
                 }
             }
-
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
             return crow::response(crow::status::ACCEPTED);
         });
@@ -321,8 +311,6 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
                     x.status = "Pass";
                 }
             }
-
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
             return crow::response(crow::status::ACCEPTED);
         });
