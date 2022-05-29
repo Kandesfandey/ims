@@ -10,3 +10,6 @@ int main() {
 
     app.port(5000).multithreaded().run();
 }
+
+// To run:
+// g++ server.cpp -lpthread -lboost_system
