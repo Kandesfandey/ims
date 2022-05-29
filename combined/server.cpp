@@ -310,10 +310,11 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
         });
 
     CROW_ROUTE(app, "/api/request/accept")
-        .methods("POST"_method)([](const crow::request &req) {
+        .methods("POST"_method)([db](const crow::request &req) {
             auto reqj = crow::json::load(req.body);
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
+            mongocxx::collection collection = db["request"];
 
             for (auto &x : requests_db) {
                 if (x.item_id == reqj["request_id"].s()) {
@@ -327,10 +328,11 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
         });
 
     CROW_ROUTE(app, "/api/request/reject")
-        .methods("POST"_method)([](const crow::request &req) {
+        .methods("POST"_method)([db](const crow::request &req) {
             auto reqj = crow::json::load(req.body);
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
+            mongocxx::collection collection = db["request"];
 
             for (auto &x : requests_db) {
                 if (x.item_id == reqj["request_id"].s()) {
@@ -342,7 +344,9 @@ void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc
         });
 
     CROW_ROUTE(app, "/api/request/view")
-        .methods("GET"_method)([]() {
+        .methods("GET"_method)([db]() {
+            mongocxx::collection collection = db["request"];
+
             std::string main_str = "[";
 
             crow::json::wvalue x;
