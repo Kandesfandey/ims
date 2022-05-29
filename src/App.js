@@ -1,5 +1,5 @@
 import React from "react";
-import { Admin } from "./pages";
+import { Admin, User } from "./pages";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Admin />} />
+            <Route path=":userId" element={<User />} />
           </Route>
         </Routes>
       </BrowserRouter>
