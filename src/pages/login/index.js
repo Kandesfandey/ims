@@ -17,6 +17,7 @@ import {
 import { GoogleLoginButton } from "react-social-login-buttons";
 import TeamBaamImage from "../../images/BAAM-logos_transparent.png";
 import LoginSVG from "../../images/login.svg";
+import { Link } from "react-router-dom"
 
 const Login = () => {
   return (
@@ -33,7 +34,9 @@ const Login = () => {
             <Input type="text" />
             <InputTitle>Password</InputTitle>
             <Input type="password" />
-            <SubmitButton>Sign In</SubmitButton>
+            <Link to="/">
+              <SubmitButton>Sign In</SubmitButton>
+            </Link>
           </FormContainer>
           <Divider>
             <DividerOr>Or</DividerOr>

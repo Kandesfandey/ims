@@ -76,6 +76,8 @@ export const SubmitButton = styled.button`
   color: black;
   font-size: 18px;
   font-weight: 500;
+  cursor: pointer;
+  
 `;
 
 export const LogoImage = styled.img`
