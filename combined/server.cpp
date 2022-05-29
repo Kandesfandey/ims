@@ -1,6 +1,27 @@
 #include "crow.h"
 #include "string"
 #include "vector"
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
+#include <cstdint>
+#include <iostream>
+#include <vector>
+#include <bsoncxx/json.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/stdx.hpp>
+#include <mongocxx/uri.hpp>
+#include <mongocxx/instance.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/array.hpp>
+
+using bsoncxx::builder::stream::close_array;
+using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
+using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
 
 struct Request {
     std::string request_id;
@@ -63,8 +84,9 @@ std::vector<Billing> billing_db;
 std::vector<Request> requests_db;
 std::vector<Inventory_Lists> inventory_lists_db;
 
-void RapidUpdateModule(crow::SimpleApp *server) {
+void RapidUpdateModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
     crow::SimpleApp &app = *server;
+    mongocxx::database &db = *db_loc;
 
     CROW_ROUTE(app, "/api/list/view/live")
         .websocket()
@@ -84,63 +106,51 @@ void RapidUpdateModule(crow::SimpleApp *server) {
         });
 }
 
-void RequestManagementModule(crow::SimpleApp *server) {
+void BillingManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
     crow::SimpleApp &app = *server;
+    mongocxx::database &db = *db_loc;
 
-    CROW_ROUTE(app, "/api/request/add")
+    CROW_ROUTE(app, "/api/bill/add")
         .methods("POST"_method)([](const crow::request &req) {
             auto reqj = crow::json::load(req.body);
             if (!reqj)
                 return crow::response(crow::status::BAD_REQUEST);
 
-            Request new_request{
-                reqj["request_id"].s(),
-                reqj["name"].s(),
-                reqj["project_owner"].s(),
-                reqj["assigned_manager"].s(),
-                "Pending",
+            Billing new_request{
+                reqj["bill_id"].s(),
                 reqj["item_id"].s(),
-
+                reqj["user_id"].s(),
+                reqj["manager_id"].s(),
+                int(reqj["price"].i()),
                 int(reqj["quantity"].i()),
-                int(reqj["expense"].i()),
             };
 
-            requests_db.push_back(new_request);
-
-            return crow::response(crow::status::OK);
-        });
-
-    CROW_ROUTE(app, "/api/request/accept")
-        .methods("POST"_method)([](const crow::request &req) {
-            auto reqj = crow::json::load(req.body);
-            if (!reqj)
-                return crow::response(crow::status::BAD_REQUEST);
-
-            for (auto &x : requests_db) {
-                if (x.item_id == reqj["request_id"].s()) {
-                    x.status = "Pass";
-                }
-            }
+            billing_db.push_back(new_request);
 
             // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
             return crow::response(crow::status::ACCEPTED);
         });
 
-    CROW_ROUTE(app, "/api/request/reject")
-        .methods("POST"_method)([](const crow::request &req) {
-            auto reqj = crow::json::load(req.body);
-            if (!reqj)
-                return crow::response(crow::status::BAD_REQUEST);
+    CROW_ROUTE(app, "/api/bill/view")
+    ([]() {
+        std::string main_str = "[";
 
-            for (auto &x : requests_db) {
-                if (x.item_id == reqj["request_id"].s()) {
-                    x.status = "Failed";
-                }
-            }
+        crow::json::wvalue x;
 
-            return crow::response(crow::status::ACCEPTED);
-        });
+        for (auto &x : billing_db) {
+            main_str += x.convertString();
+        }
+
+        main_str += "]";
+
+        return main_str;
+    });
+}
+
+void InventoryManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
+    crow::SimpleApp &app = *server;
+    mongocxx::database &db = *db_loc;
 
     CROW_ROUTE(app, "/api/list/add")
         .methods("POST"_method)([](const crow::request &req) {
@@ -160,28 +170,6 @@ void RequestManagementModule(crow::SimpleApp *server) {
             };
 
             inventory_lists_db.push_back(new_request);
-
-            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
-
-            return crow::response(crow::status::ACCEPTED);
-        });
-
-    CROW_ROUTE(app, "/api/bill/add")
-        .methods("POST"_method)([](const crow::request &req) {
-            auto reqj = crow::json::load(req.body);
-            if (!reqj)
-                return crow::response(crow::status::BAD_REQUEST);
-
-            Billing new_request{
-                reqj["bill_id"].s(),
-                reqj["item_id"].s(),
-                reqj["user_id"].s(),
-                reqj["manager_id"].s(),
-                int(reqj["price"].i()),
-                int(reqj["quantity"].i()),
-            };
-
-            billing_db.push_back(new_request);
 
             // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
 
@@ -250,15 +238,6 @@ void RequestManagementModule(crow::SimpleApp *server) {
 
             return crow::response(crow::status::ACCEPTED);
         });
-}
-
-int main() {
-    crow::SimpleApp app;
-
-    CROW_ROUTE(app, "/")
-    ([]() {
-        return "<h1>IMS</h1>";
-    });
 
     CROW_ROUTE(app, "/api/list/view")
     ([]() {
@@ -291,38 +270,100 @@ int main() {
 
         return main_str;
     });
+}
+
+void RequestManagementModule(crow::SimpleApp *server, mongocxx::database *db_loc) {
+    crow::SimpleApp &app = *server;
+    mongocxx::database &db = *db_loc;
+
+    CROW_ROUTE(app, "/api/request/add")
+        .methods("POST"_method)([](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+            Request new_request{
+                reqj["request_id"].s(),
+                reqj["name"].s(),
+                reqj["project_owner"].s(),
+                reqj["assigned_manager"].s(),
+                "Pending",
+                reqj["item_id"].s(),
+
+                int(reqj["quantity"].i()),
+                int(reqj["expense"].i()),
+            };
+
+            requests_db.push_back(new_request);
+
+            return crow::response(crow::status::OK);
+        });
+
+    CROW_ROUTE(app, "/api/request/accept")
+        .methods("POST"_method)([](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+            for (auto &x : requests_db) {
+                if (x.item_id == reqj["request_id"].s()) {
+                    x.status = "Pass";
+                }
+            }
+
+            // CROW_LOG_INFO << "Pushed: " << *requests_db.end();
+
+            return crow::response(crow::status::ACCEPTED);
+        });
+
+    CROW_ROUTE(app, "/api/request/reject")
+        .methods("POST"_method)([](const crow::request &req) {
+            auto reqj = crow::json::load(req.body);
+            if (!reqj)
+                return crow::response(crow::status::BAD_REQUEST);
+
+            for (auto &x : requests_db) {
+                if (x.item_id == reqj["request_id"].s()) {
+                    x.status = "Failed";
+                }
+            }
+
+            return crow::response(crow::status::ACCEPTED);
+        });
 
     CROW_ROUTE(app, "/api/request/view")
+        .methods("GET"_method)([]() {
+            std::string main_str = "[";
+
+            crow::json::wvalue x;
+
+            for (auto &x : requests_db) {
+                main_str += x.convertString();
+            }
+
+            main_str += "]";
+
+            return main_str;
+        });
+}
+
+int main() {
+    crow::SimpleApp app;
+
+    // Database
+    mongocxx::instance inst{};
+    const auto uri = mongocxx::uri{"mongodb+srv://ims-backend:imsbackend@cluster0.i1jrs.mongodb.net/?retryWrites=true&w=majority"};
+    mongocxx::client conn{uri};
+    mongocxx::database db = conn["IMS"];
+
+    CROW_ROUTE(app, "/")
     ([]() {
-        std::string main_str = "[";
-
-        crow::json::wvalue x;
-
-        for (auto &x : requests_db) {
-            main_str += x.convertString();
-        }
-
-        main_str += "]";
-
-        return main_str;
+        return "<h1>IMS Status OK</h1>";
     });
 
-    CROW_ROUTE(app, "/api/bill/view")
-    ([]() {
-        std::string main_str = "[";
-
-        crow::json::wvalue x;
-
-        for (auto &x : billing_db) {
-            main_str += x.convertString();
-        }
-
-        main_str += "]";
-
-        return main_str;
-    });
-
-    RequestManagementModule(&app);
+    RequestManagementModule(&app, &db);
+    BillingManagementModule(&app, &db);
+    InventoryManagementModule(&app, &db);
 
     app.port(5000)
         .multithreaded()
@@ -330,4 +371,6 @@ int main() {
 }
 
 // To run:
-// g++ combined/server.cpp -lpthread -lboost_system -o app.out
+/*
+c++ --std=c++11 combined/server.cpp -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 -L/usr/local/lib -lmongocxx -lbsoncxx -lpthread -lboost_system -o app.out
+*/
