@@ -23,20 +23,20 @@ const Featured = () => {
   return (
     <FeaturedContainer>
       <Top>
-        <Title>Total Revenue</Title>
+        <Title>Total Requests</Title>
         <MoreVert fontSize="small" />
       </Top>
       <Bottom>
         <FeaturedChart>
           <CircularProgressbar value={70} text={"70%"} strokeWidth={5} />
         </FeaturedChart>
-        <ParaTitle>Total sales made today</ParaTitle>
+        <ParaTitle>Total requests made today</ParaTitle>
         <p
           style={{
             fontSize: "30px",
           }}
         >
-          $420
+          420
         </p>
         <p
           style={{
@@ -53,21 +53,21 @@ const Featured = () => {
             <ItemTitle>Target</ItemTitle>
             <ItemResult style={{ color: "green" }}>
               <KeyboardArrowDown fontSize="small" />
-              <ResultAmount>$12.4k</ResultAmount>
+              <ResultAmount>12.4k</ResultAmount>
             </ItemResult>
           </Item>
           <Item>
             <ItemTitle>Last Week</ItemTitle>
             <ItemResult style={{ color: "red" }}>
               <KeyboardArrowUpOutlined fontSize="small" />
-              <ResultAmount>$12.4k</ResultAmount>
+              <ResultAmount>12.4k</ResultAmount>
             </ItemResult>
           </Item>
           <Item>
             <ItemTitle>Last Month</ItemTitle>
             <ItemResult style={{ color: "green" }}>
               <KeyboardArrowUpOutlined fontSize="small" />
-              <ResultAmount>$12.4k</ResultAmount>
+              <ResultAmount>12.4k</ResultAmount>
             </ItemResult>
           </Item>
         </Summary>

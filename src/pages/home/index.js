@@ -14,7 +14,7 @@ const Home = () => {
         <NavBar />
         <ChartsContainer>
           <Featured />
-          <Charts title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <Charts title="Last 6 Months (Requests)" aspect={2 / 1} />
         </ChartsContainer>
       </HomeInnerContainer>
     </HomeContainer>

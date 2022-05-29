@@ -4,7 +4,7 @@ import Navbar from "../../components/navbar";
 import { useState } from "react";
 import {
   NewContainer,
-  NewContainerContainer, 
+  NewContainerContainer,
   FormContainer,
   FormInputContainer,
   H1Container,
@@ -17,8 +17,38 @@ import {
   TopBottomContainer,
   ButtonContainer,
 } from "./styles/newrequest";
-const NewRequest = ({ inputs, title }) => {
+import axios from "axios";
+
+import { useNavigate } from "react-router-dom";
+
+const NewRequest = () => {
   const [file, setFile] = useState("");
+  const [title, setTitle] = useState("");
+  const [projectOwner, setProjectOwner] = useState("");
+  const [assignedManager, setAssignedManager] = useState("");
+  const [status, setStatus] = useState("");
+  const [itemId, setItemId] = useState("");
+  // const [requestId, setRequestId] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [expense, setExpense] = useState("");
+
+  const navigate = useNavigate();
+
+  const send_req = (e) => {
+    e.preventDefault();
+    axios.post("http://172.20.1.78:5000/api/request/add", {
+      name: title,
+      project_owner: projectOwner,
+      assigned_manager: assignedManager,
+      status: status,
+      item_id: itemId,
+      request_id: "1",
+      quantity: quantity,
+      expense: expense,
+    });
+
+    navigate("/requests");
+  };
 
   return (
     <NewContainer>
@@ -53,16 +83,70 @@ const NewRequest = ({ inputs, title }) => {
                 />
               </FormInputContainer>
 
-              {inputs.map((input) => (
-                <FormInputContainer key={input.id}>
-                  <LabelContainer>{input.label}</LabelContainer>
-                  <InputContainer
-                    type={input.type}
-                    placeholder={input.placeholder}
-                  />
-                </FormInputContainer>
-              ))}
-              <ButtonContainer>Add</ButtonContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Title"}</LabelContainer>
+                <InputContainer
+                  type={"text"}
+                  placeholder={"Request Title"}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Project Owner"}</LabelContainer>
+                <InputContainer
+                  type={"text"}
+                  placeholder={"Project Owner"}
+                  value={projectOwner}
+                  onChange={(e) => setProjectOwner(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Assigned Manager"}</LabelContainer>
+                <InputContainer
+                  type={"text"}
+                  placeholder={"Assigned Manager"}
+                  value={assignedManager}
+                  onChange={(e) => setAssignedManager(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Status"}</LabelContainer>
+                <InputContainer
+                  type={"text"}
+                  placeholder={"Pending"}
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Item ID"}</LabelContainer>
+                <InputContainer
+                  type={"number"}
+                  placeholder={"Item ID"}
+                  value={itemId}
+                  onChange={(e) => setItemId(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Quantity"}</LabelContainer>
+                <InputContainer
+                  type={"number"}
+                  placeholder={"1"}
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
+              </FormInputContainer>
+              <FormInputContainer>
+                <LabelContainer>{"Expense"}</LabelContainer>
+                <InputContainer
+                  type={"number"}
+                  placeholder={"1000"}
+                  value={expense}
+                  onChange={(e) => setExpense(e.target.value)}
+                />
+              </FormInputContainer>
+              <ButtonContainer onClick={send_req}>Add</ButtonContainer>
             </FormContainer>
           </RightContainer>
         </TopBottomContainer>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import {
   DataTableContainer,
@@ -139,7 +140,23 @@ const userRows = [
 
 const DataTable = () => {
   const [data, setData] = useState(userRows);
+  useEffect(() => {
+    let ignore = false;
 
+    async function fetchData() {
+      const result = await axios.get(
+        "http://172.20.1.78:5000/api/request/view"
+      );
+      if (!ignore && result.status === 200) {
+        setData(JSON.parse(result.data));
+      }
+    }
+
+    fetchData();
+    return () => {
+      ignore = true;
+    };
+  });
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };

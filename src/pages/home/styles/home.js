@@ -14,5 +14,5 @@ export const ChartsContainer = styled.div`
   display: flex;
   padding: 20px;
   gap: 20px;
-  padding: 150px 20px;
+  padding: 50px 20px;
 `;
