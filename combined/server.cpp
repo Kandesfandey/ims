@@ -86,10 +86,6 @@ struct Billing {
     }
 };
 
-std::vector<Billing> billing_db;
-std::vector<Request> requests_db;
-std::vector<Inventory_Lists> inventory_lists_db;
-
 void LiveHandlerModule(crow::App<crow::CORSHandler> *server, mongocxx::database *db_loc, std::unordered_set<crow::websocket::connection *> *request_list_users, std::unordered_set<crow::websocket::connection *> *inventory_list_users) {
     crow::App<crow::CORSHandler> &app = *server;
     mongocxx::database &db = *db_loc;
@@ -151,17 +147,6 @@ void BillingManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::dat
 
             bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(docview);
 
-            // Billing new_request{
-            //     reqj["bill_id"].s(),
-            //     reqj["item_id"].s(),
-            //     reqj["user_id"].s(),
-            //     reqj["manager_id"].s(),
-            //     int(reqj["price"].i()),
-            //     int(reqj["quantity"].i()),
-            // };
-
-            // billing_db.push_back(new_request);
-
             return crow::response(crow::status::OK);
         });
 
@@ -222,19 +207,6 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
 
             bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(docview);
 
-            // Inventory_Lists new_request{
-            //     reqj["name"].s(),
-            //     reqj["type"].s(),
-            //     reqj["inventory_id"].s(),
-            //     reqj["priority"].s(),
-            //     reqj["expense_type"].s(),
-            //     int(reqj["available"].i()),
-            //     int(reqj["life"].i()),
-            //     int(reqj["quantity"].i()),
-            // };
-
-            // inventory_lists_db.push_back(new_request);
-
             return crow::response(crow::status::OK);
         });
 
@@ -245,46 +217,6 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
                 return crow::response(crow::status::BAD_REQUEST);
 
             mongocxx::collection collection = db["inventory"];
-
-            //     auto builder = bsoncxx::builder::stream::document{};
-            //     bsoncxx::document::value doc_value = builder
-            //                                         << "name"
-            //                                         << reqj["name"].s()
-            //                                         << "type"
-            //                                         << reqj["type"].s()
-            //                                         << "inventory_id"
-            //                                         << reqj["inventory_id"].s()
-            //                                         << "priority"
-            //                                         << reqj["priority"].s()
-            //                                         << "expense_type"
-            //                                         << reqj["expense_type"].s()
-            //                                         << "available"
-            //                                         << int(reqj["available"].i())
-            //                                         << "life"
-            //                                         << int(reqj["life"].i())
-            //                                         << "quantity"
-            //                                         << int(reqj["quantity"].i())
-            //                                         << bsoncxx::builder::stream::finalize;
-
-            // collection.update_one(builder << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
-            //           builder << "$set" << open_document <<doc_value);
-
-            // Inventory_Lists new_request{
-            //     reqj["name"].s(),
-            //     reqj["type"].s(),
-            //     reqj["inventory_id"].s(),
-            //     reqj["priority"].s(),
-            //     reqj["expense_type"].s(),
-            //     int(reqj["available"].i()),
-            //     int(reqj["life"].i()),
-            //     int(reqj["quantity"].i()),
-            // };
-
-            // for (auto &x : inventory_lists_db) {
-            //     if (x.inventory_id == reqj["inventory_id"].s()) {
-            //         x = new_request;
-            //     }
-            // }
 
             return crow::response(crow::status::OK);
         });
@@ -302,12 +234,6 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
             collection.update_one(query << "inventory_id" << reqj["inventory_id"].s() << bsoncxx::builder::stream::finalize,
                                   query << "$set" << open_document << "priority" << reqj["priority"].s() << close_document << bsoncxx::builder::stream::finalize);
 
-            // for (auto &x : inventory_lists_db) {
-            //     if (x.inventory_id == reqj["inventory_id"].s()) {
-            //         x.priority = reqj["priority"].s();
-            //     }
-            // }
-
             return crow::response(crow::status::OK);
         });
 
@@ -322,13 +248,6 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
             auto builder = bsoncxx::builder::stream::document{};
 
             collection.delete_one(builder << "id" << reqj["id"].s() << bsoncxx::builder::stream::finalize);
-
-            // for (auto i = inventory_lists_db.begin(); i != inventory_lists_db.end(); ++i) {
-            //     if ((*i).inventory_id == reqj["inventory_id"].s()) {
-            //         inventory_lists_db.erase(i);
-            //         i--;
-            //     }
-            // }
 
             return crow::response(crow::status::OK);
         });
@@ -360,20 +279,6 @@ void InventoryManagementModule(crow::App<crow::CORSHandler> *server, mongocxx::d
         mongocxx::collection collection = db["inventory"];
 
         mongocxx::cursor cursor = collection.find({});
-
-        // for (auto &&temp : cursor) {
-        //     bsoncxx::builder::stream::document query{};
-        //     if (temp["available"].get_utf8().value == 0) {
-        //         temp.available = 1;
-
-        //         collection.update_one(query << "inventory_id" << temp["inventory_id"].s() << bsoncxx::builder::stream::finalize,
-        //                               query << "$set" << open_document << "available" << 1 << close_document << bsoncxx::builder::stream::finalize);
-        //         main_str = "Server Assigned " + (x["inventory_id"]);
-        //         break;
-        //     } else {
-        //         main_str = "No Server are currently Free";
-        //     }
-        // }
 
         return main_str;
     });
